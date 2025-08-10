@@ -7,7 +7,14 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "setup:prod": "NODE_ENV=production node scripts/setupProduction.js",
-    "setup:prod-win": "set NODE_ENV=production && node scripts/setupProduction.js"
+    "setup:prod-win": "set NODE_ENV=production && node scripts/setupProduction.js",
+    "verify:prod": "NODE_ENV=production node scripts/verifyDatabase.js",
+    "verify:prod-win": "set NODE_ENV=production && node scripts/verifyDatabase.js",
+    "info:prod": "NODE_ENV=production node scripts/connectionInfo.js",
+    "info:prod-win": "set NODE_ENV=production && node scripts/connectionInfo.js",
+    "setup-verify": "node scripts/setupAndVerify.js",
+    "start:3002": "set PORT=3002 && npm start",
+    "dev:3002": "set PORT=3002 && npm run dev"
   },
   "keywords": [
     "nodejs",

@@ -13,12 +13,41 @@ async function setupProductionDatabase() {
     
     // Sincronizar modelos (crear tablas)
     console.log('Sincronizando modelos con la base de datos...');
-    await sequelize.sync({ force: false, alter: true });
-    console.log('✅ Tablas sincronizadas correctamente.');
+    console.log('⚠️  Usando force: true para recrear las tablas...');
+    await sequelize.sync({ force: true });
+    console.log('✅ Tablas creadas correctamente.');
     
-    // Verificar que las tablas existen
-    const tables = await sequelize.getQueryInterface().showAllTables();
-    console.log('📋 Tablas creadas:', tables);
+    // Verificar que las tablas existen inmediatamente
+    console.log('\n🔍 Verificando tablas creadas...');
+    const queryInterface = sequelize.getQueryInterface();
+    const tables = await queryInterface.showAllTables();
+    console.log('📋 Tablas encontradas con showAllTables:', tables);
+    
+    // Verificar con consulta SQL directa
+    const [sqlTables] = await sequelize.query(`
+      SELECT table_name 
+      FROM information_schema.tables 
+      WHERE table_schema = 'public' 
+      AND table_type = 'BASE TABLE'
+      ORDER BY table_name;
+    `);
+    console.log('📋 Tablas encontradas con SQL:', sqlTables.map(t => t.table_name));
+    
+    // Probar consultas a los modelos
+    console.log('\n🧪 Probando consultas a los modelos:');
+    try {
+      const maquinasCount = await Maquina.count();
+      console.log(`✅ Máquinas: ${maquinasCount} registros`);
+    } catch (error) {
+      console.log(`❌ Error al consultar Máquinas: ${error.message}`);
+    }
+    
+    try {
+      const clientesCount = await Cliente.count();
+      console.log(`✅ Clientes: ${clientesCount} registros`);
+    } catch (error) {
+      console.log(`❌ Error al consultar Clientes: ${error.message}`);
+    }
     
     // Crear datos iniciales si es necesario
     const maquinasCount = await Maquina.count();
