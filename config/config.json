@@ -1,0 +1,18 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "panchodelgado123",
+    "database": "recortes",
+    "host": "localhost",
+    "dialect": "postgres",
+    "port": 5432
+  },
+  "production": {
+    "username": "postgres",
+    "password": "SYklYopDkLQSdgMswTasyydamYVpTAkU",
+    "database": "railway",
+    "host": "gondola.proxy.rlwy.net",
+    "dialect": "postgres",
+    "port": 29955
+  }
+}

@@ -1,0 +1,45 @@
+Instrucciones para crear la estructura del backend
+
+Necesitaremos realizar algunos cambios en los archivos.
+Cambiaremos la base de datos sqlite por una base de datos postgrees que ya tenemos creada pero tenemos que crear los modelos y las tablas al inciar la app
+
+Por el momento solo tendremos dos tablas. Una de recortes y la otras de maquinas
+Aqui te dejo los modelos que estaban creados en python:
+
+class Maquina(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    nombre = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.nombre
+
+# Create your models here.
+class Recorte(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    largo = models.FloatField()
+    ancho = models.FloatField()
+    espesor = models.FloatField()
+    cantidad = models.IntegerField()
+    estado = models.BooleanField(default=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+    maquina = models.ForeignKey(Maquina, on_delete=models.CASCADE)
+    imagen = models.ImageField(upload_to='recortes/', null=True, blank=True)
+
+    def __str__(self):
+        return f"Recorte {self.id} - {self.largo}x{self.ancho}x{self.espesor}"
+
+
+Las credenciales de la base de datos postgress son: 
+'NAME': 'recortes',
+'USER': 'postgres',
+'PASSWORD': 'panchodelgado123',
+'HOST': 'localhost',
+'PORT': '5432',
+
+Las rutas de la api van a poder consultar a 
+-todos los recortes
+-recortes por maquina
+-recortes por espesores
+-todas las masquinas
+
