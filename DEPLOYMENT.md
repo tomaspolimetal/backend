@@ -81,11 +81,9 @@ PROD_DB_PASSWORD=tu_password_produccion
  5. **Configuración automática durante el despliegue:**
     ```bash
     # El archivo fly.toml está configurado para ejecutar automáticamente:
-    # 1. Migraciones de base de datos: npm run migrate
-    # 2. Creación de máquinas: npm run create-machines
+    # - Migraciones de base de datos: npm run migrate
     # 
-    # Comando completo: "npm run migrate && npm run create-machines"
-    # Esto asegura que las máquinas estén disponibles después del despliegue
+    # Las máquinas se crean después del primer despliegue exitoso
     ```
  
  6. **Desplegar:**
@@ -105,9 +103,21 @@ PROD_DB_PASSWORD=tu_password_produccion
     fly status
     ```
  
+ 8. **Crear máquinas iniciales (después del primer despliegue):**
+    ```bash
+    # Una vez que la aplicación esté funcionando, crear las máquinas
+    fly ssh console
+    npm run init-machines
+    exit
+    
+    # O alternativamente, ejecutar directamente:
+    fly ssh console -C "npm run init-machines"
+    ```
+ 
  **Características de Fly.io:**
  - ✅ **DATABASE_URL automática**: Se configura automáticamente al conectar PostgreSQL
- - ✅ **Inicialización automática**: Ejecuta migraciones y crea máquinas en cada despliegue
+ - ✅ **Migraciones automáticas**: Ejecuta migraciones en cada despliegue
+ - ✅ **Inicialización manual**: Crear máquinas después del primer despliegue
  - ✅ **SSL/HTTPS**: Habilitado por defecto
  - ✅ **Auto-scaling**: Escala automáticamente según el tráfico
  - ✅ **Regiones globales**: Despliega cerca de tus usuarios

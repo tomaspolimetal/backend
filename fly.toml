@@ -8,10 +8,10 @@ primary_region = "mia"
 
 [env]
   NODE_ENV = "production"
-  PORT = "8080"
+  PORT = "3001"
 
 [http_service]
-  internal_port = 8080
+  internal_port = 3001
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true
@@ -33,7 +33,7 @@ primary_region = "mia"
   memory_mb = 256
 
 [deploy]
-  release_command = "npm run migrate && npm run create-machines"
+  release_command = "npm run migrate"
 
 [[statics]]
   guest_path = "/app/uploads"

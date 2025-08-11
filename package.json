@@ -7,7 +7,8 @@
     "node": "18.x"
   },
   "scripts": {
-    "start": "node scripts/checkEnv.js && node server.js",
+    "start": "node server.js",
+    "start:check": "node scripts/checkEnv.js && node server.js",
     "dev": "node scripts/checkEnv.js && nodemon server.js",
     "check-env": "node scripts/checkEnv.js",
     "migrate": "npx sequelize-cli db:migrate",
@@ -19,6 +20,7 @@
     "info:prod-win": "set NODE_ENV=production && node scripts/connectionInfo.js",
     "setup-verify": "node scripts/setupAndVerify.js",
     "create-machines": "node scripts/createMachines.js",
+    "init-machines": "NODE_ENV=production node scripts/createMachines.js",
     "start:3002": "set PORT=3002 && npm start",
     "dev:3002": "set PORT=3002 && npm run dev"
   },
