@@ -28,6 +28,17 @@ npm install
 cp .env.example .env
 ```
 
+3. Editar el archivo `.env` con tus credenciales locales:
+```env
+NODE_ENV=development
+PORT=3000
+DEV_DB_HOST=localhost
+DEV_DB_PORT=5432
+DEV_DB_NAME=recortes
+DEV_DB_USER=postgres
+DEV_DB_PASSWORD=tu_password_local
+```
+
 3. Para desarrollo local:
 ```bash
 npm run dev
@@ -35,22 +46,33 @@ npm run dev
 
 ## 🌐 Despliegue en Producción
 
+### Variables de Entorno
+
+El proyecto está configurado para usar variables de entorno tanto en desarrollo como en producción. **NUNCA** subas el archivo `.env` a GitHub.
+
+### Configuración para Railway/Render/Vercel
+
+Configurar las siguientes variables de entorno en tu plataforma de despliegue:
+
+```env
+NODE_ENV=production
+PORT=3000
+
+# Variables de base de datos de producción
+PROD_DB_HOST=tu_host_produccion
+PROD_DB_PORT=5432
+PROD_DB_NAME=tu_base_datos_produccion
+PROD_DB_USER=postgres
+PROD_DB_PASSWORD=tu_password_produccion
+```
+
 ### Configuración de Base de Datos
 
-El backend está configurado para usar Railway PostgreSQL en producción:
+Para configurar la base de datos de producción:
 
 ```bash
 # Configurar la base de datos de producción
 npm run setup:prod-win
-```
-
-### Variables de Entorno en Railway
-
-Configurar las siguientes variables en Railway:
-
-```
-NODE_ENV=production
-PORT=3000
 ```
 
 ### Scripts Disponibles

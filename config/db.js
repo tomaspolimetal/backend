@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { Sequelize } = require('sequelize');
 
 // Configuración basada en el entorno
@@ -6,13 +7,13 @@ const isProduction = process.env.NODE_ENV === 'production';
 let sequelize;
 
 if (isProduction) {
-  // Configuración para producción (Railway)
+  // Configuración para producción usando variables de entorno
   sequelize = new Sequelize({
-    username: 'postgres',
-    password: 'SYklYopDkLQSdgMswTasyydamYVpTAkU',
-    database: 'railway',
-    host: 'gondola.proxy.rlwy.net',
-    port: 29955,
+    username: process.env.PROD_DB_USER || 'postgres',
+    password: process.env.PROD_DB_PASSWORD,
+    database: process.env.PROD_DB_NAME || 'railway',
+    host: process.env.PROD_DB_HOST,
+    port: process.env.PROD_DB_PORT || 5432,
     dialect: 'postgres',
     logging: false,
     dialectOptions: {
@@ -23,13 +24,18 @@ if (isProduction) {
     }
   });
 } else {
-  // Configuración para desarrollo
-  sequelize = new Sequelize('recortes', 'postgres', 'panchodelgado123', {
-    host: 'localhost',
-    dialect: 'postgres',
-    port: 5432,
-    logging: false
-  });
+  // Configuración para desarrollo usando variables de entorno
+  sequelize = new Sequelize(
+    process.env.DEV_DB_NAME || 'recortes',
+    process.env.DEV_DB_USER || 'postgres',
+    process.env.DEV_DB_PASSWORD || 'password',
+    {
+      host: process.env.DEV_DB_HOST || 'localhost',
+      dialect: 'postgres',
+      port: process.env.DEV_DB_PORT || 5432,
+      logging: false
+    }
+  );
 }
 
 module.exports = sequelize;

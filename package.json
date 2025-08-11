@@ -4,8 +4,9 @@
   "description": "Aplicación Node.js con Socket.IO y base de datos para mostrar datos en tiempo real",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
+    "start": "node scripts/checkEnv.js && node server.js",
+    "dev": "node scripts/checkEnv.js && nodemon server.js",
+    "check-env": "node scripts/checkEnv.js",
     "setup:prod": "NODE_ENV=production node scripts/setupProduction.js",
     "setup:prod-win": "set NODE_ENV=production && node scripts/setupProduction.js",
     "verify:prod": "NODE_ENV=production node scripts/verifyDatabase.js",
