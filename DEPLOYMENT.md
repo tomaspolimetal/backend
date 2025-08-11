@@ -78,11 +78,14 @@ PROD_DB_PASSWORD=tu_password_produccion
     # fly secrets set MI_VARIABLE=valor
     ```
  
- 5. **Configurar migraciones (opcional):**
+ 5. **Configuración automática durante el despliegue:**
     ```bash
-    # Si tienes migraciones de Sequelize
-    # El archivo fly.toml ya está configurado para ejecutarlas automáticamente
-    # durante el despliegue con: release_command = "npm run migrate"
+    # El archivo fly.toml está configurado para ejecutar automáticamente:
+    # 1. Migraciones de base de datos: npm run migrate
+    # 2. Creación de máquinas: npm run create-machines
+    # 
+    # Comando completo: "npm run migrate && npm run create-machines"
+    # Esto asegura que las máquinas estén disponibles después del despliegue
     ```
  
  6. **Desplegar:**
@@ -104,6 +107,7 @@ PROD_DB_PASSWORD=tu_password_produccion
  
  **Características de Fly.io:**
  - ✅ **DATABASE_URL automática**: Se configura automáticamente al conectar PostgreSQL
+ - ✅ **Inicialización automática**: Ejecuta migraciones y crea máquinas en cada despliegue
  - ✅ **SSL/HTTPS**: Habilitado por defecto
  - ✅ **Auto-scaling**: Escala automáticamente según el tráfico
  - ✅ **Regiones globales**: Despliega cerca de tus usuarios

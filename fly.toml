@@ -33,7 +33,7 @@ primary_region = "mia"
   memory_mb = 256
 
 [deploy]
-  release_command = "npm run migrate"
+  release_command = "npm run migrate && npm run create-machines"
 
 [[statics]]
   guest_path = "/app/uploads"

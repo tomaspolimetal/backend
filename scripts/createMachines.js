@@ -1,5 +1,5 @@
 // Script para crear las máquinas específicas solicitadas
-process.env.NODE_ENV = 'production';
+// Se ejecuta automáticamente durante el despliegue en Fly.io
 
 const sequelize = require('../config/db');
 const Maquina = require('../models/Maquina');
