@@ -13,6 +13,7 @@
     "info:prod": "NODE_ENV=production node scripts/connectionInfo.js",
     "info:prod-win": "set NODE_ENV=production && node scripts/connectionInfo.js",
     "setup-verify": "node scripts/setupAndVerify.js",
+    "create-machines": "node scripts/createMachines.js",
     "start:3002": "set PORT=3002 && npm start",
     "dev:3002": "set PORT=3002 && npm run dev"
   },
