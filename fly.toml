@@ -1,40 +1,22 @@
-# fly.toml app configuration file generated for tu-app on 2024-01-15T10:00:00Z
+# fly.toml app configuration file generated for backend-xzscwq on 2025-08-11T23:02:13Z
+#
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
 
-app = "tu-app-backend"
-primary_region = "mia"
+app = 'backend-xzscwq'
+primary_region = 'gru'
 
 [build]
 
-[env]
-  NODE_ENV = "production"
-  PORT = "8080"
-
 [http_service]
-  internal_port = 8080
+  internal_port = 3000
   force_https = true
-  auto_stop_machines = true
+  auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 0
-  processes = ["app"]
-
-[[http_service.checks]]
-  interval = "15s"
-  grace_period = "5s"
-  method = "GET"
-  path = "/"
-  protocol = "http"
-  timeout = "10s"
-  tls_skip_verify = false
+  processes = ['app']
 
 [[vm]]
-  cpu_kind = "shared"
+  cpu_kind = 'shared'
   cpus = 1
   memory_mb = 256
-
-[deploy]
-  release_command = "npm run migrate && npm run create-machines"
-
-[[statics]]
-  guest_path = "/app/uploads"
-  url_prefix = "/uploads"
