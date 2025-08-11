@@ -39,6 +39,77 @@ PROD_DB_PASSWORD=tu_password_produccion
 
 ## 🌐 Plataformas de Despliegue
 
+### Fly.io (Recomendado)
+
+1. **Instalar Fly CLI:**
+   ```bash
+   # Windows (PowerShell)
+   iwr https://fly.io/install.ps1 -useb | iex
+   
+   # macOS/Linux
+   curl -L https://fly.io/install.sh | sh
+   ```
+
+2. **Configurar proyecto:**
+   ```bash
+   # Autenticarse
+   fly auth login
+   
+   # Inicializar proyecto
+   fly launch
+   ```
+
+3. **Configurar PostgreSQL:**
+   ```bash
+   # Crear base de datos PostgreSQL
+   fly postgres create --name tu-app-db
+   
+   # Conectar la app con la base de datos
+   fly postgres attach --app tu-app tu-app-db
+   ```
+
+4. **Configurar variables de entorno:**
+    ```bash
+    # Fly automáticamente configura DATABASE_URL cuando conectas la base de datos
+    # Solo necesitas configurar variables adicionales si las tienes
+    fly secrets set NODE_ENV=production
+    
+    # Si tienes otras variables específicas de tu app
+    # fly secrets set MI_VARIABLE=valor
+    ```
+ 
+ 5. **Configurar migraciones (opcional):**
+    ```bash
+    # Si tienes migraciones de Sequelize
+    # El archivo fly.toml ya está configurado para ejecutarlas automáticamente
+    # durante el despliegue con: release_command = "npm run migrate"
+    ```
+ 
+ 6. **Desplegar:**
+    ```bash
+    fly deploy
+    ```
+ 
+ 7. **Verificar despliegue:**
+    ```bash
+    # Ver logs en tiempo real
+    fly logs
+    
+    # Abrir la aplicación en el navegador
+    fly open
+    
+    # Ver estado de la aplicación
+    fly status
+    ```
+ 
+ **Características de Fly.io:**
+ - ✅ **DATABASE_URL automática**: Se configura automáticamente al conectar PostgreSQL
+ - ✅ **SSL/HTTPS**: Habilitado por defecto
+ - ✅ **Auto-scaling**: Escala automáticamente según el tráfico
+ - ✅ **Regiones globales**: Despliega cerca de tus usuarios
+ - ✅ **WebSockets**: Soporte completo para Socket.IO
+ - ✅ **Archivos estáticos**: Configurado para servir uploads
+
 ### Railway
 
 1. **Conectar repositorio:**

@@ -11,21 +11,39 @@ const requiredEnvVars = {
     'DEV_DB_USER',
     'DEV_DB_PASSWORD'
   ],
-  production: [
-    'PROD_DB_HOST',
-    'PROD_DB_PORT',
-    'PROD_DB_NAME', 
-    'PROD_DB_USER',
-    'PROD_DB_PASSWORD'
-  ]
+  production: {
+    // Fly.io y plataformas similares usan DATABASE_URL
+    flyio: ['DATABASE_URL'],
+    // Otras plataformas usan variables individuales
+    manual: [
+      'PROD_DB_HOST',
+      'PROD_DB_PORT',
+      'PROD_DB_NAME', 
+      'PROD_DB_USER',
+      'PROD_DB_PASSWORD'
+    ]
+  }
 };
 
 function checkEnvironmentVariables() {
   const env = process.env.NODE_ENV || 'development';
   console.log(`🔍 Verificando variables de entorno para: ${env}`);
   
-  const requiredVars = requiredEnvVars[env] || requiredEnvVars.development;
+  let requiredVars = [];
   const missingVars = [];
+  
+  if (env === 'production') {
+    // Verificar si existe DATABASE_URL (Fly.io, Heroku, etc.)
+    if (process.env.DATABASE_URL) {
+      requiredVars = requiredEnvVars.production.flyio;
+      console.log('📡 Detectado DATABASE_URL - Configuración automática de plataforma');
+    } else {
+      requiredVars = requiredEnvVars.production.manual;
+      console.log('⚙️  Usando configuración manual de base de datos');
+    }
+  } else {
+    requiredVars = requiredEnvVars.development;
+  }
   
   requiredVars.forEach(varName => {
     if (!process.env[varName]) {
