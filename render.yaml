@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: recortes-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PROD_DB_HOST
+        value: dpg-d2d7p949c44c73etne90-a.oregon-postgres.render.com
+      - key: PROD_DB_PORT
+        value: 5432
+      - key: PROD_DB_NAME
+        value: recortes_db
+      - key: PROD_DB_USER
+        value: recortes_db_user
+      - key: PROD_DB_PASSWORD
+        value: lkbVsLjhzdGBVfiblUFvNijPIocGS86p
+      - key: PORT
+        value: 10000

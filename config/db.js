@@ -7,9 +7,9 @@ const isProduction = process.env.NODE_ENV === 'production';
 let sequelize;
 
 if (isProduction) {
-  // Fly.io y otras plataformas proporcionan DATABASE_URL automáticamente
+  // Configuración para Render.com
   if (process.env.DATABASE_URL) {
-    // Configuración usando DATABASE_URL (Fly.io, Heroku, etc.)
+    // Configuración usando DATABASE_URL (Render, Heroku, etc.)
     sequelize = new Sequelize(process.env.DATABASE_URL, {
       dialect: 'postgres',
       logging: false,
@@ -21,11 +21,11 @@ if (isProduction) {
       }
     });
   } else {
-    // Configuración manual para producción (Railway, Render, etc.)
+    // Configuración manual para producción (Render)
     sequelize = new Sequelize({
-      username: process.env.PROD_DB_USER || 'postgres',
+      username: process.env.PROD_DB_USER || 'recortes_db_user',
       password: process.env.PROD_DB_PASSWORD,
-      database: process.env.PROD_DB_NAME || 'railway',
+      database: process.env.PROD_DB_NAME || 'recortes_db',
       host: process.env.PROD_DB_HOST,
       port: process.env.PROD_DB_PORT || 5432,
       dialect: 'postgres',
