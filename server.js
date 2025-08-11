@@ -54,6 +54,16 @@ app.use((req, res, next) => {
   next();
 });
 
+// Health check endpoint
+app.get('/', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    message: 'Backend is running',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
 app.use('/api/maquinas', maquinasRouter);
 app.use('/api/recortes', recortesRouter);
 app.use('/api/clientes', clientesRouter);
@@ -139,15 +149,20 @@ io.on('connection', async (socket) => {
 const PORT = process.env.PORT || 3001;
 
 async function startServer() {
+  // Iniciar el servidor primero
+  server.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server is running on port ${PORT}`);
+    console.log('Server is accessible from other devices in the network');
+  });
+
+  // Intentar conectar a la base de datos
   try {
     await sequelize.sync();
     console.log('Database connected and synchronized');
-      server.listen(PORT, '0.0.0.0', () => {
-      console.log(`Server is running on port ${PORT}`);
-      console.log('Server is accessible from other devices in the network');
-    });
   } catch (error) {
     console.error('Unable to connect to the database:', error);
+    console.error('Server will continue running without database connection');
+    console.error('Please check your database configuration and environment variables');
   }
 }
 
