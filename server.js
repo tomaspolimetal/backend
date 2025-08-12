@@ -35,8 +35,10 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use(express.static('public')); // Comentado porque el directorio no existe
-// Servir archivos estáticos desde la carpeta uploads
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Servir archivos estáticos desde la carpeta uploads (solo en desarrollo)
+if (process.env.NODE_ENV !== 'production') {
+  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+}
 
 // Función para emitir eventos a todos los clientes
 const emitToAll = (event, data) => {

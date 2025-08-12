@@ -30,7 +30,7 @@ const Recorte = sequelize.define('Recorte', {
     allowNull: false
   },
   imagen: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: true
   },
   observaciones: {

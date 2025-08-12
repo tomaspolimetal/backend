@@ -73,7 +73,14 @@ exports.createRecorte = async (req, res) => {
     // Procesar la imagen si existe
     let imagenPath = null;
     if (req.file) {
-      imagenPath = '/uploads/' + req.file.filename;
+      if (process.env.NODE_ENV === 'production') {
+        // En producción, convertir imagen a base64 para almacenar en BD
+        const base64Image = req.file.buffer.toString('base64');
+        imagenPath = `data:${req.file.mimetype};base64,${base64Image}`;
+      } else {
+        // En desarrollo, usar ruta del archivo
+        imagenPath = '/uploads/' + req.file.filename;
+      }
     }
 
     const recorte = await Recorte.create({
@@ -204,14 +211,20 @@ exports.updateRecorte = async (req, res) => {
     // Procesar la imagen si existe una nueva
     let imagenPath = recorte.imagen;
     if (req.file) {
-      // Eliminar la imagen anterior si existe
-      if (recorte.imagen) {
-        const oldImagePath = path.join(__dirname, '..', recorte.imagen);
-        if (fs.existsSync(oldImagePath)) {
-          fs.unlinkSync(oldImagePath);
+      if (process.env.NODE_ENV === 'production') {
+        // En producción, convertir imagen a base64
+        const base64Image = req.file.buffer.toString('base64');
+        imagenPath = `data:${req.file.mimetype};base64,${base64Image}`;
+      } else {
+        // En desarrollo, eliminar imagen anterior y usar nueva ruta
+        if (recorte.imagen && !recorte.imagen.startsWith('data:')) {
+          const oldImagePath = path.join(__dirname, '..', recorte.imagen);
+          if (fs.existsSync(oldImagePath)) {
+            fs.unlinkSync(oldImagePath);
+          }
         }
+        imagenPath = '/uploads/' + req.file.filename;
       }
-      imagenPath = '/uploads/' + req.file.filename;
     }
 
     await recorte.update({
@@ -248,8 +261,8 @@ exports.deleteRecorte = async (req, res) => {
       return res.status(404).json({ message: 'Recorte no encontrado' });
     }
 
-    // Eliminar la imagen si existe
-    if (recorte.imagen) {
+    // Eliminar la imagen si existe (solo en desarrollo)
+    if (recorte.imagen && process.env.NODE_ENV !== 'production' && !recorte.imagen.startsWith('data:')) {
       const imagePath = path.join(__dirname, '..', recorte.imagen);
       if (fs.existsSync(imagePath)) {
         fs.unlinkSync(imagePath);
