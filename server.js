@@ -5,6 +5,7 @@ const socketIo = require('socket.io');
 const path = require('path');
 const cors = require('cors');
 const sequelize = require('./config/db');
+const { DataTypes } = require('sequelize');
 const maquinaRoutes = require('./routes/maquinaRoutes');
 const recorteRoutes = require('./routes/recorteRoutes');
 const clienteRoutes = require('./routes/clienteRoutes');
@@ -150,6 +151,33 @@ io.on('connection', async (socket) => {
 // Database sync and server start
 const PORT = process.env.PORT || 3001;
 
+// Asegurar esquema de BD en producción (cambiar Recortes.imagen a TEXT si es necesario)
+async function ensureDatabaseSchema() {
+  try {
+    const qi = sequelize.getQueryInterface();
+    const table = await qi.describeTable('Recortes');
+    const imagenCol = table && table.imagen;
+
+    if (imagenCol) {
+      const typeStr = String(imagenCol.type || '').toLowerCase();
+      if (!typeStr.includes('text')) {
+        console.log('Actualizando columna Recortes.imagen a tipo TEXT...');
+        await qi.changeColumn('Recortes', 'imagen', {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        });
+        console.log('Columna Recortes.imagen actualizada a TEXT correctamente');
+      } else {
+        console.log('La columna Recortes.imagen ya es de tipo TEXT');
+      }
+    } else {
+      console.warn('No se encontró la columna imagen en la tabla Recortes al describir la tabla');
+    }
+  } catch (err) {
+    console.warn('No se pudo garantizar el esquema de la BD (imagen TEXT):', err.message);
+  }
+}
+
 const startServer = async () => {
   try {
     // Iniciar el servidor HTTP primero
@@ -159,6 +187,12 @@ const startServer = async () => {
     });
 
     // Intentar conectar a la base de datos
+    await sequelize.authenticate();
+    console.log('Database connection established');
+
+    // Garantizar el esquema (especialmente en producción donde no corren migraciones)
+    await ensureDatabaseSchema();
+
     await sequelize.sync();
     console.log('Database connected and synchronized');
   } catch (error) {
