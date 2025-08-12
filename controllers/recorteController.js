@@ -55,6 +55,11 @@ exports.getRecortesUtilizados = async (req, res) => {
 // Crear un nuevo recorte
 exports.createRecorte = async (req, res) => {
   try {
+    console.log('=== DEBUG createRecorte ===');
+    console.log('NODE_ENV:', process.env.NODE_ENV);
+    console.log('req.body:', req.body);
+    console.log('req.file:', req.file ? 'File present' : 'No file');
+    
     const { largo, ancho, espesor, cantidad, maquinaId, observaciones } = req.body;
     
     // Validar campos requeridos
@@ -104,7 +109,27 @@ exports.createRecorte = async (req, res) => {
     
     res.status(201).json(recorteConMaquina);
   } catch (error) {
-    res.status(500).json({ message: 'Error al crear el recorte', error: error.message });
+    console.error('Error en createRecorte:', error);
+    
+    // Manejo específico de errores de Multer
+    if (error.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ 
+        message: 'El archivo es demasiado grande. Tamaño máximo: 5MB' 
+      });
+    }
+    
+    if (error.code === 'LIMIT_UNEXPECTED_FILE') {
+      return res.status(400).json({ 
+        message: 'Tipo de archivo no permitido. Solo se permiten imágenes.' 
+      });
+    }
+    
+    // Error genérico
+    res.status(500).json({ 
+      message: 'Error al crear el recorte', 
+      error: error.message,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 };
 
