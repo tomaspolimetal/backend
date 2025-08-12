@@ -34,7 +34,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
+// app.use(express.static('public')); // Comentado porque el directorio no existe
 // Servir archivos estáticos desde la carpeta uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -148,15 +148,15 @@ io.on('connection', async (socket) => {
 // Database sync and server start
 const PORT = process.env.PORT || 3001;
 
-async function startServer() {
-  // Iniciar el servidor primero
-  server.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server is running on port ${PORT}`);
-    console.log('Server is accessible from other devices in the network');
-  });
-
-  // Intentar conectar a la base de datos
+const startServer = async () => {
   try {
+    // Iniciar el servidor HTTP primero
+    server.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server is running on port ${PORT}`);
+      console.log('Server is accessible from other devices in the network');
+    });
+
+    // Intentar conectar a la base de datos
     await sequelize.sync();
     console.log('Database connected and synchronized');
   } catch (error) {
