@@ -19,6 +19,12 @@ const handleMulterError = (err, req, res, next) => {
         message: 'Tipo de archivo no permitido. Solo se permiten imágenes.' 
       });
     }
+
+    if (err.message === 'El archivo debe ser una imagen') {
+      return res.status(400).json({
+        message: 'El archivo debe ser una imagen'
+      });
+    }
     
     if (err.message === 'Unexpected field') {
       return res.status(400).json({ 
