@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const recorteController = require('../controllers/recorteController');
+const recorteViewController = require('../controllers/recorteViewController');
 const upload = require('../utils/uploadConfig');
 
 // Middleware para manejo de errores de Multer
@@ -45,6 +46,8 @@ router.get('/', recorteController.getAllRecortes);
 router.get('/disponibles', recorteController.getRecortesDisponibles);
 router.get('/utilizados', recorteController.getRecortesUtilizados);
 router.get('/maquina/:maquinaId', recorteController.getRecortesByMaquina);
+router.get('/maquina/:maquinaId/pendientes', recorteViewController.getPendientesByMaquina);
+router.get('/maquina/:maquinaId/estado/:estado', recorteViewController.getByMaquinaEstado);
 router.get('/espesor/:espesor', recorteController.getRecortesByEspesor);
 
 // Ruta POST para crear un nuevo recorte

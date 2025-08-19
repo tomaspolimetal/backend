@@ -117,6 +117,34 @@ npm run setup:prod-win
 - `POST /api/recortes` - Crear nuevo recorte (con imagen)
 - `PUT /api/recortes/:id` - Actualizar recorte
 - `DELETE /api/recortes/:id` - Eliminar recorte
+- `GET /api/recortes/maquina/:maquinaId/pendientes?page=N` - Recortes con estado `false` (utilizados) por máquina, paginados de 10 en 10 (orden: `fecha_actualizacion` DESC)
+- `GET /api/recortes/maquina/:maquinaId/estado/:estado?page=N` - Recortes por máquina filtrando por estado `true|false`, paginados de 10 en 10 (orden: `fecha_creacion` DESC si `true`, `fecha_actualizacion` DESC si `false`)
+
+#### Paginación
+- Parámetro de query: `page` (opcional, por defecto 1)
+- Tamaño de página fijo: `10`
+- Respuesta:
+```json
+{
+  "page": 1,
+  "limit": 10,
+  "total": 123,
+  "totalPages": 13,
+  "data": [ ... ]
+}
+```
+
+#### Vistas de Base de Datos para rendimiento
+Para evitar traer historiales completos desde el frontend y optimizar consultas, se crean dos vistas en PostgreSQL mediante migraciones:
+- `vw_recortes_maquina_false`: recortes con `estado=false` (utilizados) con `JOIN` a `Maquinas`
+- `vw_recortes_maquina_true`: recortes con `estado=true` (disponibles) con `JOIN` a `Maquinas`
+
+Además, se agregan índices en `Recortes` para consultas por `maquinaId`, `estado` y `fecha_creacion`:
+- `idx_recortes_maquina_estado_fecha`
+- `idx_recortes_maquina_estado`
+- `idx_recortes_estado_fecha`
+
+Estas vistas e índices se crean con la migración `20250125-create-database-views.js`. Ejecuta las migraciones antes de iniciar:
 
 ## 🔄 WebSockets
 

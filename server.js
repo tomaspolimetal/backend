@@ -33,8 +33,8 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
   credentials: true
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // app.use(express.static('public')); // Comentado porque el directorio no existe
 // Servir archivos estáticos desde la carpeta uploads (solo en desarrollo)
 if (process.env.NODE_ENV !== 'production') {

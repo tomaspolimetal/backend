@@ -60,7 +60,7 @@ exports.createRecorte = async (req, res) => {
     console.log('req.body:', req.body);
     console.log('req.file:', req.file ? 'File present' : 'No file');
     
-    const { largo, ancho, espesor, cantidad, maquinaId, observaciones } = req.body;
+    const { largo, ancho, espesor, cantidad, maquinaId, observaciones, imagen } = req.body;
     
     // Validar campos requeridos
     if (!largo || !ancho || !espesor || !cantidad || !maquinaId) {
@@ -77,7 +77,11 @@ exports.createRecorte = async (req, res) => {
 
     // Procesar la imagen si existe
     let imagenPath = null;
-    if (req.file) {
+    
+    // Priorizar imagen base64 del body
+    if (imagen && imagen.startsWith('data:image/')) {
+      imagenPath = imagen;
+    } else if (req.file) {
       if (process.env.NODE_ENV === 'production') {
         // En producción, convertir imagen a base64 para almacenar en BD
         const base64Image = req.file.buffer.toString('base64');
@@ -218,7 +222,7 @@ exports.updateRecorteCantidad = async (req, res) => {
 exports.updateRecorte = async (req, res) => {
   try {
     const { id } = req.params;
-    const { largo, ancho, espesor, cantidad, maquinaId, observaciones } = req.body;
+    const { largo, ancho, espesor, cantidad, maquinaId, observaciones, imagen } = req.body;
 
     const recorte = await Recorte.findByPk(id);
     if (!recorte) {
@@ -235,7 +239,11 @@ exports.updateRecorte = async (req, res) => {
 
     // Procesar la imagen si existe una nueva
     let imagenPath = recorte.imagen;
-    if (req.file) {
+    
+    // Priorizar imagen base64 del body
+    if (imagen && imagen.startsWith('data:image/')) {
+      imagenPath = imagen;
+    } else if (req.file) {
       if (process.env.NODE_ENV === 'production') {
         // En producción, convertir imagen a base64
         const base64Image = req.file.buffer.toString('base64');

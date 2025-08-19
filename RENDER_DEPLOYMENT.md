@@ -61,6 +61,8 @@ Una vez desplegado, puedes verificar que todo funciona:
    - `GET /api/maquinas` - Listar máquinas
    - `GET /api/clientes` - Listar clientes
    - `GET /api/recortes` - Listar recortes
+   - `GET /api/recortes/maquina/:maquinaId/pendientes?page=N` - Recortes con estado `false` (utilizados) por máquina, paginados de 10 en 10 (orden: `fecha_actualizacion` DESC)
+   - `GET /api/recortes/maquina/:maquinaId/estado/:estado?page=N` - Recortes por máquina filtrando por estado `true|false`, paginados de 10 en 10 (orden: `fecha_creacion` DESC si `true`, `fecha_actualizacion` DESC si `false`)
 
 ## Notas importantes
 
@@ -68,3 +70,23 @@ Una vez desplegado, puedes verificar que todo funciona:
 - Las tablas y máquinas ya están creadas en la base de datos
 - El servidor Socket.IO está configurado para manejar conexiones en tiempo real
 - La aplicación incluye un health check endpoint en la raíz (`/`)
+
+## Migraciones de base de datos en Render
+
+- Las vistas e índices se crean mediante la migración `20250125-create-database-views.js`.
+- Con la configuración actual (Build Command: `npm install`, Start Command: `npm start`), Render no ejecuta migraciones automáticamente, por lo que las vistas NO se crearán a menos que ejecutes las migraciones.
+
+Opciones para asegurarlas en cada despliegue:
+
+1) Recomendado: Cambiar el Start Command a:
+```
+npm run migrate && npm start
+```
+- Puedes configurarlo en el dashboard de Render (Settings → Start Command) o en `render.yaml`.
+
+2) Manual (una sola vez por cambio de esquema): Abrir una consola en Render y ejecutar:
+```
+npx sequelize-cli db:migrate
+```
+
+Nota: `sequelize.sync()` no crea vistas ni índices; solo sincroniza tablas básicas. Por eso es necesario ejecutar las migraciones.
