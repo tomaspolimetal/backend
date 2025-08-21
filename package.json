@@ -21,6 +21,8 @@
     "setup-verify": "node scripts/setupAndVerify.js",
     "create-machines": "node scripts/createMachines.js",
     "init-machines": "NODE_ENV=production node scripts/createMachines.js",
+    "create-views": "node scripts/runCreateViews.js",
+    "create-views:env": "node scripts/runCreateViews.js --env",
     "start:3002": "set PORT=3002 && npm start",
     "dev:3002": "set PORT=3002 && npm run dev"
   },
@@ -40,7 +42,7 @@
     "pg": "^8.16.0",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.7",
-    "socket.io": "^4.7.2"
+    "socket.io": "^4.8.1"
   },
   "devDependencies": {
     "dotenv": "^16.5.0",

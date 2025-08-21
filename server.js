@@ -9,6 +9,7 @@ const { DataTypes } = require('sequelize');
 const maquinaRoutes = require('./routes/maquinaRoutes');
 const recorteRoutes = require('./routes/recorteRoutes');
 const clienteRoutes = require('./routes/clienteRoutes');
+const estadisticasRoutes = require('./routes/estadisticasRoutes');
 
 const app = express();
 const server = http.createServer(app);
@@ -70,6 +71,7 @@ app.get('/', (req, res) => {
 app.use('/api/maquinas', maquinasRouter);
 app.use('/api/recortes', recortesRouter);
 app.use('/api/clientes', clientesRouter);
+app.use('/api/estadisticas', estadisticasRoutes);
 
 // Configuración de Socket.IO para tiempo real
 io.on('connection', async (socket) => {
